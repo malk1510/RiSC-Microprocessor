@@ -18,7 +18,7 @@ entity decoder is
 architecture behavior of decoder is
 
   begin
-  signal sign: out std_logic := '0';
+  signal sign: std_logic := '0';
   process(clk,instruction) is
       begin
       if(clk'event and clk='1') then

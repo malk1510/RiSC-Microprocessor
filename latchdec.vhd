@@ -1,70 +1,36 @@
-Library ieee;
-Use ieee.std_logic_1164.all;
-Use ieee.std_logic_unsigned.all;
-Use ieee.std_logic_arith.all;
+library ieee;
+use ieee.std_logic_1164.all;
 
--------------------------Entity Declaration--------------------------------------------------------
-entity latch2dec is
-  port(immedi, rlsaddressi : in std_logic_vector(7 downto 0);
-       rdxi,rdyi : in std_logic_vector(3 downto 0);
-       PCi : in std_logic_vector(7 downto 0);   -- output PC
-       aluoptodrami, offseti: in std_logic_vector(3 downto 0); -- offset for the jump if zero and not zero, aluopdraam for the dram operations
-       aluopi: in std_logic_vector(4 downto 0);      
-       aluopsei, wri, ryimmedi,regindiri: in std_logic;
-       ---------------------------------------------------------------
-      pctake,clk: in std_logic;
-      ----------------------------------------------------------------
-      immed, rlsaddress : out std_logic_vector(7 downto 0);
-       rdx,rdy : out std_logic_vector(3 downto 0);
-       PC : out std_logic_vector(7 downto 0);   -- output PC
-       aluoptodram, offset: out std_logic_vector(3 downto 0); -- offset for the jump if zero and not zero, aluopdraam for the dram operations
-       aluop: out std_logic_vector(4 downto 0);
-       
-       aluopse, wr, ryimmed,regindir: out std_logic);
-end  latch2dec;      
----------------------------------------------------------------------------------------------------------
+entity latch_dec is
+  port(
+	 clk: in std_logic;
+  	 ra_i, rb_i, rc_i, immed_i: in std_logic_vector(15 downto 0);
+	 ra_addr_i, rb_addr_i, rc_addr_i, aluop_i: in std_logic_vector(2 downto 0);
+	 immed_8_bit_i, PCi: in std_logic_vector(7 downto 0);
+	 ra, rb, rc, immed: out std_logic_vector(15 downto 0);
+	 ra_addr, rb_addr, rc_addr, aluop: out std_logic_vector(2 downto 0);
+	 immed_8_bit, PC: out std_logic_vector(7 downto 0);
+	 ten_bit_i: in std_logic_vector(9 downto 0);
+	 ten_bit: out std_logic_vector(9 downto 0));
+end  latch_dec;      
 
--------------------------Architecture Body Declaration---------------------------------------------------      
-  Architecture lacha2dec of latch2dec is
+  architecture behavior of latch_dec is
     begin
-      --------------Process Declaration----------------------
       cntr: process(clk,pctake) is  
-      variable clk_count : integer := 1 ;
       begin    
       if(clk'event and clk='0') then
-        if(clk_count=2) then
-        immed <=immedi;
-        rlsaddress <= rlsaddressi;
-        rdx <= rdxi;
-        rdy <=rdyi;
-        PC <= PCi;
-        aluoptodram <=aluoptodrami;
-        offset <= offseti;
-        aluop <=aluopi;
-        aluopse <= aluopsei; wr <= wri; ryimmed <= ryimmedi;regindir <=regindiri;
-        
-        
-      else
-        clk_count:=clk_count +1;
+			ra <= ra_i;
+			rb <= rb_i;
+			rc <= rc_i;
+			immed <= immed_i;
+			ra_addr <= ra_addr_i;
+			rb_addr <= rb_addr_i;
+			rc_addr <= rc_addr_i;
+			aluop <= aluop_i;
+			immed_8_bit <= immed_8_bit_i;
+			PC <= PCi;
+			ten_bit <= ten_bit_i;
       end if;
-        
-        
-      end if;
-      
-      if(pctake ='1') then
-      aluop<="00000";
-    end if;
     end process cntr;
-    -----------------------------------------------------------------------------
-    
-    ---------------Process 2 declaration----------------------------------------
-    cntr2: process(pctake)
-    
-    begin
       
-      
-    
-    end process cntr2;
-    ----------------------------------------------------------------------------
-      
-    end Architecture lacha2dec;     --architecture ends here
+end architecture behavior;

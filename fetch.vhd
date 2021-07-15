@@ -1,49 +1,36 @@
+library ieee;
+use ieee.std_logic_1164.all;
 
-Library ieee;
-Use ieee.std_logic_1164.all;
-Use ieee.std_logic_unsigned.all;
-Use ieee.std_logic_arith.all;
-
-
------------------------- Entity Declaration---------------------
 entity fetch is
-	port ( clk : in std_logic;
-		  rst : in std_logic; 
-		  ctrl : in std_logic;
-		  pc_in : in std_logic_vector(7 downto 0);
-		  pc_out : out std_logic_vector(7 downto 0);
-		  instruction : out std_logic_vector (15 downto 0);
-		  clk_out: out std_logic  					);
+	port(clk,jump : in std_logic;
+		  jump_addr : in std_logic_vector(7 downto 0);
+		  PC_out : out std_logic_vector(7 downto 0);
+		  instruction : out std_logic_vector (15 downto 0));
 end fetch; 
---------------------------------------------------------------------
 
--------------------Architecture Body Declaration-----------------------
-architecture arch_fetch of fetch is 
 
-signal pcout :  std_logic_vector(7 downto 0);
+architecture behavior of fetch is 
 
-  -----------component declaration------------------------
-  component program_counter is
-		port( 	
-		clk : in std_logic;
-		PC_in : in std_logic_vector(7 downto 0);  
-		rst_bar: in std_logic; --Active low reset signl
-		PC_ctrl : in std_logic;
-		PC_out:  out std_logic_vector(7 downto 0);
-		clk_out : out std_logic					);
-  end component  program_counter;
+signal pc :  std_logic_vector(7 downto 0);
+signal clk_out: std_logic;
 
-  component instruction_memory is 
-    port( pc: in std_logic_vector(7 downto 0);
+entity program_counter is
+	port(clk, jump: in std_logic;
+		jump_addr: in std_logic_vector(7 downto 0);
+		clk_out: out std_logic;
+		PC_out: out std_logic_vector(7 downto 0));
+end program_counter;
+
+entity instr_mem is 
+  port( pc: in std_logic_vector(7 downto 0);
         instruction: out std_logic_vector(15 downto 0));  
-  end component instruction_memory;
-  ---------------------------------------------------------
+end entity instr_mem;
 
-begin --achitecture starts here
-p_c : program_counter port map(clk, pc_in, rst, ctrl, pcout, clk_out);
+begin
+CHIP1 : program_counter port map(clk, jump, jump_addr, clk_out, pc);
 
-i_m : instruction_memory port map(pcout, instruction);
+CHIP2 : instr_mem port map(pc, instruction);
 
-pc_out <= pcout;
+pc_out <= pc;
 
-end architecture arch_fetch ; -- architecture ends here
+end architecture behavior;

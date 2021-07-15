@@ -2,14 +2,10 @@ library ieee;
 Use ieee.std_logic_1164.all;
 
 entity program_counter is
-	port( 	
-		clk : in std_logic;
-		PC_in : in std_logic_vector(7 downto 0);  
-		rst_bar: in std_logic; --Active low reset signl
-		PC_ctrl : in std_logic;
-		PC_out:  out std_logic_vector(7 downto 0);
-		clk_out : out std_logic					);
-
+	port(clk, jump: in std_logic;
+		jump_addr: in std_logic_vector(7 downto 0);
+		clk_out: out std_logic;
+		PC_out: out std_logic_vector(7 downto 0));
 end program_counter;
 
 architecture counter of program_counter is
