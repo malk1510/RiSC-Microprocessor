@@ -12,7 +12,7 @@ entity reg_file is
 		wr,clk: in std_logic;
 		wrb:in std_logic_vector(15 downto 0)
     );
- end ram; 
+ end reg_file; 
 
  
 architecture behavior of reg_file is
