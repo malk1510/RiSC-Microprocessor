@@ -104,4 +104,7 @@ begin
 	CHIP2: latch_fetch port map(PC_out_temp, instruction_temp, clk, PC_out, instruction);
 	CHIP3: dec port map(clk, wr, instruction, wrb, PC_out, wb_index, ra_addr_i, rb_addr_i, rc_addr_i, aluop_i, ra_i, rb_i, rc_i, immed_i, immed_8_bit_i, PCi, ten_bit_i);
 	CHIP4: latch_dec port map(clk, ra_i, rb_i, rc_i, immed_i, ra_addr_i, rb_addr_i, rc_addr_i, aluop_i, immed_8_bit_i, PCi, ra, rb, rc, immed, ra_addr, rb_addr, rc_addr, aluop, immed_8_bit, PC, ten_bit_i, ten_bit);
-	CHIP5: alu port map(ra, rb, rc, immed, ra_addr, rb_addr, rc_addr, aluop, immed_8_bit, PC, mem_addr, PC_wrong, jump_addr, reg_write, mem_write, reg_addr, write_back, )
+	CHIP5: alu port map(ra, rb, rc, immed, ra_addr, rb_addr, rc_addr, aluop, immed_8_bit, PC, mem_addr_i, PC_wrong, jump_addr, reg_write_i, mem_write_i, reg_addr_i, write_back_i, store_i, load_i, jump_i, ten_bit);
+	CHIP6: latch_exec port map(mem_addr_i, PC, reg_write_i, mem_write_i, reg_addr_i, write_back_i, store_i, load_i, clk, mem_addr, PC2, reg_write, mem_write, reg_addr, write_back, store, load);
+	CHIP7: memory port map(mem_addr, mem_write, load, store, mem_reg_write);
+	CHIP8: latch_mem
