@@ -6,7 +6,13 @@ entity pipelined is
 end entity pipelined;
 
 architecture behavior of pipelined is
-
+	
+signal jump, wr, write_back_i, store_i, load_i, write_back, store, load, load_wb, write_back_out: std_logic;
+signal jump_addr, PC_out_temp, PC_out, immed_8_bit_i, immed_8_bit, PCi, PC, PC_wrong, PC2, mem_addr_i, jump_addr_i, mem_addr, jump_addr: std_logic_vector(7 downto 0);
+signal instruction_temp, instruction, wrb, ra_i, rb_i, rc_i, ra, rb, rc, immed, immed_i, reg_write_i, mem_write_i, reg_write, reg_write_wb, mem_write, mem_reg_write_wb, mem_reg_write: std_logic_vector(15 downto 0);
+signal wb_index, ra_addr_i, rb_addr_i, rc_addr_i, aluop_i, ra_addr, rb_addr, rc_addr, aluop, reg_addr_i, reg_addr, reg_addr_wb: std_logic_vector(2 downto 0);
+signal ten_bit_i, ten_bit: std_logic_vector(9 downto 0);
+	
 component fetch is
 	port(clk,jump : in std_logic;
 		  jump_addr : in std_logic_vector(7 downto 0);
@@ -104,7 +110,9 @@ begin
 	CHIP2: latch_fetch port map(PC_out_temp, instruction_temp, clk, PC_out, instruction);
 	CHIP3: dec port map(clk, wr, instruction, wrb, PC_out, wb_index, ra_addr_i, rb_addr_i, rc_addr_i, aluop_i, ra_i, rb_i, rc_i, immed_i, immed_8_bit_i, PCi, ten_bit_i);
 	CHIP4: latch_dec port map(clk, ra_i, rb_i, rc_i, immed_i, ra_addr_i, rb_addr_i, rc_addr_i, aluop_i, immed_8_bit_i, PCi, ra, rb, rc, immed, ra_addr, rb_addr, rc_addr, aluop, immed_8_bit, PC, ten_bit_i, ten_bit);
-	CHIP5: alu port map(ra, rb, rc, immed, ra_addr, rb_addr, rc_addr, aluop, immed_8_bit, PC, mem_addr_i, PC_wrong, jump_addr, reg_write_i, mem_write_i, reg_addr_i, write_back_i, store_i, load_i, jump_i, ten_bit);
-	CHIP6: latch_exec port map(mem_addr_i, PC, reg_write_i, mem_write_i, reg_addr_i, write_back_i, store_i, load_i, clk, mem_addr, PC2, reg_write, mem_write, reg_addr, write_back, store, load);
+	CHIP5: alu port map(ra, rb, rc, immed, ra_addr, rb_addr, rc_addr, aluop, immed_8_bit, PC, mem_addr_i, PC_wrong, jump_addr, reg_write_i, mem_write_i, reg_addr_i, write_back_i, store_i, load_i, jump, ten_bit);
+	CHIP6: latch_exec port map(mem_addr_i, PC_wrong, reg_write_i, mem_write_i, reg_addr_i, write_back_i, store_i, load_i, clk, mem_addr, PC2, reg_write, mem_write, reg_addr, write_back, store, load);
 	CHIP7: memory port map(mem_addr, mem_write, load, store, mem_reg_write);
-	CHIP8: latch_mem
+	CHIP8: latch_mem port map(load, write_back, reg_addr, reg_write, mem_reg_write, clk, load_wb, write_back_out, reg_addr_wb, reg_write_wb, mem_reg_write_wb);
+	CHIP9: writeback port map(load_wb, write_back_out, reg_addr_wb, reg_write_wb, mem_reg_write_wb, wr, wb_index, wrb);
+end architecture behavior;
