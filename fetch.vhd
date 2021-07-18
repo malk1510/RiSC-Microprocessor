@@ -19,7 +19,7 @@ entity program_counter is
 		jump_addr: in std_logic_vector(7 downto 0);
 		clk_out: out std_logic;
 		PC_out: out std_logic_vector(7 downto 0));
-end entity program_counter;
+end entity;
 
 entity instr_mem is 
   port( pc: in std_logic_vector(7 downto 0);
