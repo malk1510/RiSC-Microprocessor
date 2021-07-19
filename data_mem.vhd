@@ -51,6 +51,7 @@ entity memory is
                                                                  
       
       begin     --Process begins here
+	      data_mem_array(0) := x"0000";
 			if(load = '1') then
 				reg_write <= data_mem_array(to_integer(unsigned(mem_addr)));
 			elsif(store = '1') then
